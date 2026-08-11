@@ -1,6 +1,7 @@
 /target
 /build
 /.idea
+/.DS_Store
 *.iws
 *.iml
 *.ipr
