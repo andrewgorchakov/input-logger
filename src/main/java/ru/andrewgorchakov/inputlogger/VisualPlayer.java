@@ -211,16 +211,16 @@ public class VisualPlayer {
         int wMouse = 80, hMouse = 40;
 
         // WASD
-        drawButton(startX + 70, yTop + 150, wKey, hKey, active.contains("W"));
-        drawButton(startX, yTop + gapY, wKey, hKey, active.contains("A"));
-        drawButton(startX + 70, yTop + gapY, wKey, hKey, active.contains("S"));
-        drawButton(startX + 140, yTop + gapY, wKey, hKey, active.contains("D"));
+        drawButton(startX + 70, yTop + 150, wKey, hKey, active.contains("W") || active.contains("87"));
+        drawButton(startX, yTop + gapY, wKey, hKey, active.contains("A") || active.contains("65"));
+        drawButton(startX + 70, yTop + gapY, wKey, hKey, active.contains("S") || active.contains("83"));
+        drawButton(startX + 140, yTop + gapY, wKey, hKey, active.contains("D") || active.contains("68"));
 
         // Пробел
-        drawButton(startX, yTop + 2 * gapY - 160, wSpace, hSpace, active.contains("SPACE"));
+        drawButton(startX, yTop + 2 * gapY - 160, wSpace, hSpace, active.contains("SPACE") || active.contains("32"));
 
         // Shift
-        drawButton(startX - 160, yTop + 2 * gapY - 160, wShift, hShift, active.contains("SHIFT_L"));
+        drawButton(startX - 160, yTop + 2 * gapY - 160, wShift, hShift, active.contains("SHIFT_L") || active.contains("340"));
 
         // Кнопки мыши
         int mouseX = startX + wSpace + 20;

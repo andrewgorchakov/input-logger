@@ -40,7 +40,7 @@ public class ParallelLogger {
     // устанавливаем колбэки
     private void setupCallbacks() {
         glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
-            String id = getKeyId(key);
+            String id = getKeyIdAsCode(key);
             long timeNs = System.currentTimeMillis();
 
             if (action == GLFW_PRESS) {
@@ -93,6 +93,26 @@ public class ParallelLogger {
                 return "SPACE";
             case GLFW_KEY_LEFT_SHIFT:
                 return "SHIFT_L";
+            default:
+                return "KEY_" + key;
+        }
+    }
+
+    // получаем значения нажимаемых клавиш в виде кода по их константам GLFW
+    private String getKeyIdAsCode(int key) {
+        switch (key) {
+            case GLFW_KEY_W:
+                return "87";
+            case GLFW_KEY_A:
+                return "65";
+            case GLFW_KEY_S:
+                return "83";
+            case GLFW_KEY_D:
+                return "68";
+            case GLFW_KEY_SPACE:
+                return "32";
+            case GLFW_KEY_LEFT_SHIFT:
+                return "340";
             default:
                 return "KEY_" + key;
         }
