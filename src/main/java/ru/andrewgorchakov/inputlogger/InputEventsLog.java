@@ -75,6 +75,7 @@ public class InputEventsLog {
         public void setY(int y) { this.y = y; }
     }
 
+    // открываем транзакцию по событию PRESS
     public void press(String channel, long timeNs) {
         List<TimeInterval> list = keyChannels.get(channel);
         if (list == null) {
@@ -84,6 +85,7 @@ public class InputEventsLog {
         list.add(new TimeInterval(timeNs, -1L));
     }
 
+    // закрываем транзакцию по событию RELEASE
     public void release(String channel, long timeNs) {
         List<TimeInterval> list = keyChannels.get(channel);
         if (list == null || list.isEmpty()) {

@@ -10,7 +10,7 @@ public class ParallelLogger {
     private final InputEventsLog log = new InputEventsLog();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private static final double MOUSE_MOVE_THRESHOLD = 6.0;
+    private static final double MOUSE_MOVE_THRESHOLD = 6.0; // порог чувствительности мыши
     private double lastLoggedX = Double.NaN;
     private double lastLoggedY = Double.NaN;
 
@@ -37,6 +37,7 @@ public class ParallelLogger {
         glfwTerminate();
     }
 
+    // устанавливаем колбэки
     private void setupCallbacks() {
         glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
             String id = getKeyId(key);
@@ -77,6 +78,7 @@ public class ParallelLogger {
         });
     }
 
+    // получаем значения нажимаемых клавиш по их константам GLFW
     private String getKeyId(int key) {
         switch (key) {
             case GLFW_KEY_W:
@@ -96,6 +98,7 @@ public class ParallelLogger {
         }
     }
 
+    // получаем значения нажимаемых клавиш мыши по их константам GLFW
     private String getMouseId(int button) {
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
             return "MOUSE_L";
@@ -108,6 +111,7 @@ public class ParallelLogger {
         }
     }
 
+    // сохраняем лог в файл
     private void saveLog() {
         try {
             mapper.writerWithDefaultPrettyPrinter()

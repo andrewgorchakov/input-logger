@@ -40,6 +40,7 @@ public class VisualPlayer {
             throw new java.io.FileNotFoundException("Файл лога не найден: " + path.toAbsolutePath());
         }
         ObjectMapper mapper = new ObjectMapper();
+        // читаем и распарсиваем лог
         this.log = mapper.readValue(path.toFile(), InputEventsLog.class);
 
         // Вычисляем реальный разброс координат в логе
@@ -71,9 +72,10 @@ public class VisualPlayer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // создаём таймлайн (лист для хранения TimelineEvent)
         List<TimelineEvent> timeline = new ArrayList<>();
 
-        // События клавиатуры
+        // Обрабатываем лог по событиям клавиатуры
         for (Map.Entry<String, List<InputEventsLog.TimeInterval>> entry : log.getKeyChannels().entrySet()) {
             String channel = entry.getKey();
             for (InputEventsLog.TimeInterval iv : entry.getValue()) {
@@ -84,12 +86,13 @@ public class VisualPlayer {
             }
         }
 
-        // События мыши
+        // Обрабатываем лог по событиям мыши
         for (InputEventsLog.MousePoint p : log.getMousePoints()) {
             String coords = String.format("%.1f,%.1f", p.getX(), p.getY());
             timeline.add(new TimelineEvent(p.getTimestampNs(), "MOVE", coords));
         }
 
+        // делаем сортировку таймлайна
         timeline.sort(Comparator.comparingLong(TimelineEvent::getTimeNs));
 
         baseTimeNs = timeline.isEmpty() ? System.currentTimeMillis() : timeline.get(0).getTimeNs();
@@ -101,6 +104,7 @@ public class VisualPlayer {
         double offsetY = (height - logHeight) / 2.0;  // центрируем движение по вертикали
         double scaleY = 1.0;                         // масштаб 1:1 (без растягивания)
 
+        // основной цикл воспроизведения
         while (!glfwWindowShouldClose(window)) {
             long nowNs = System.currentTimeMillis();
             double deltaSec = (nowNs - lastFrameTimeNs) / timeDimensionScale * speedMultiplier;
@@ -183,19 +187,19 @@ public class VisualPlayer {
 
             boolean isClickActive = showClick && (nowNs < clickEndTime);
 
+            // отображаем те кнопки как нажатые, которые находятся в данный момент в activeKeys
             drawKeyButtons(activeKeys);
             drawMouse(mouseX, mouseY, isClickActive);
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-
-
         }
 
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
+    // рисуем кнопки
     private void drawKeyButtons(Set<String> active) {
         int startX = 460;          // левая граница колонки ASD
         int yTop = 300;            // Y для верхней кнопки (W)
@@ -225,6 +229,7 @@ public class VisualPlayer {
         drawButton(mouseX + wMouse + 20, mouseY, wMouse, hMouse, active.contains("MOUSE_R"));
     }
 
+    // метод рисует одну кнопку
     private void drawButton(int x, int y, int w, int h, boolean isActive) {
         setColor(0.4f, 0.4f, 0.4f);
         drawRect(x, y, w, h);
@@ -232,6 +237,7 @@ public class VisualPlayer {
         drawRect(x + 2, y + 2, w - 4, h - 4);
     }
 
+    // метод рисует курсор мыши
     private void drawMouse(double mx, double my, boolean isClick) {
         setColor(1.0f, 1.0f, 1.0f);
         drawCircle((float) mx, (float) my, 10);
